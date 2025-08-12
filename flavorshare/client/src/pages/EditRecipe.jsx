@@ -20,7 +20,6 @@ const EditRecipe = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm();
 
   // Removed unused cuisine variable

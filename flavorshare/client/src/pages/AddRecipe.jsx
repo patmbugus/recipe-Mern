@@ -17,7 +17,6 @@ const AddRecipe = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm();
 
   const cuisines = [
