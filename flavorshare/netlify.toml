@@ -1,16 +1,91 @@
 [build]
+  # Auto-detect build settings - Netlify will automatically configure these
+  # but we provide fallbacks for better reliability
   base = ""
-  command = "cd client && npm run build"
-  publish = "client/build"
+  
+  # Smart build command that auto-detects project structure
+  command = """
+  # Auto-detect and build based on project structure
+  if [ -d "client" ] && [ -f "client/package.json" ]; then
+    echo "🔄 Detected MERN stack structure - building from client directory"
+    cd client && npm install && npm run build
+  elif [ -f "package.json" ] && [ -d "src" ]; then
+    echo "🔄 Detected standard React app structure"
+    npm install && npm run build
+  elif [ -d "frontend" ] && [ -f "frontend/package.json" ]; then
+    echo "🔄 Detected frontend directory structure"
+    cd frontend && npm install && npm run build
+  else
+    echo "🔄 Attempting standard build process"
+    npm install && npm run build
+  fi
+  """
+  
+  # Smart publish directory detection
+  publish = """
+  # Auto-detect build output directory
+  if [ -d "client/build" ]; then
+    echo "client/build"
+  elif [ -d "build" ]; then
+    echo "build"
+  elif [ -d "dist" ]; then
+    echo "dist"
+  elif [ -d "frontend/build" ]; then
+    echo "frontend/build"
+  else
+    echo "build"
+  fi
+  """
 
 [build.environment]
+  # Node.js version - Netlify will auto-detect but we specify for consistency
   NODE_VERSION = "18"
+  
+  # NPM version for better dependency management
+  NPM_VERSION = "9"
+  
+  # Build optimization
+  NODE_OPTIONS = "--max-old-space-size=4096"
 
+# Auto-redirect for React Router (SPA)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
 
+# Handle API routes (if you add them later)
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+
+# Handle static assets with intelligent caching
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Vary = "Accept-Encoding"
+
+# Handle JavaScript bundles
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Handle CSS files
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Handle HTML files
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Security headers for all pages
 [[headers]]
   for = "/*"
   [headers.values]
@@ -18,3 +93,33 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Environment-specific configurations
+[context.production.environment]
+  REACT_APP_ENVIRONMENT = "production"
+
+[context.deploy-preview.environment]
+  REACT_APP_ENVIRONMENT = "preview"
+
+[context.branch-deploy.environment]
+  REACT_APP_ENVIRONMENT = "development"
+
+# Build optimization
+[build.processing]
+  skip_processing = false
+
+# Asset optimization
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+[build.processing.images]
+  compress = true

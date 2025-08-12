@@ -1,0 +1,193 @@
+# Advanced Netlify Configuration with Auto-Detection
+# This file provides multiple configuration options for different project structures
+
+[build]
+  # Base directory - Netlify will auto-detect from repository root
+  base = ""
+  
+  # Smart build command that detects the project structure
+  command = """
+  # Auto-detect project structure and build accordingly
+  if [ -f "package.json" ] && [ -d "client" ]; then
+    # MERN stack structure (current FlavorShare setup)
+    echo "Detected MERN stack structure"
+    cd client && npm install && npm run build
+  elif [ -f "package.json" ] && [ -d "src" ]; then
+    # Standard React app structure
+    echo "Detected standard React app structure"
+    npm install && npm run build
+  elif [ -f "client/package.json" ]; then
+    # Client-only structure
+    echo "Detected client-only structure"
+    cd client && npm install && npm run build
+  elif [ -f "frontend/package.json" ]; then
+    # Frontend directory structure
+    echo "Detected frontend directory structure"
+    cd frontend && npm install && npm run build
+  else
+    echo "Unknown project structure, attempting standard build"
+    npm install && npm run build
+  fi
+  """
+  
+  # Smart publish directory detection
+  publish = """
+  # Auto-detect build output directory
+  if [ -d "client/build" ]; then
+    echo "client/build"
+  elif [ -d "build" ]; then
+    echo "build"
+  elif [ -d "dist" ]; then
+    echo "dist"
+  elif [ -d "frontend/build" ]; then
+    echo "frontend/build"
+  else
+    echo "build"
+  fi
+  """
+
+[build.environment]
+  # Node.js version - Netlify will auto-detect but we specify for consistency
+  NODE_VERSION = "18"
+  
+  # NPM version for better dependency management
+  NPM_VERSION = "9"
+  
+  # Yarn version (if using Yarn)
+  YARN_VERSION = "1.22"
+  
+  # Build optimization flags
+  NODE_OPTIONS = "--max-old-space-size=4096"
+  
+  # Environment detection
+  NODE_ENV = "production"
+
+# Auto-redirect for React Router (SPA)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+# Handle API routes (if you add them later)
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+
+# Handle static assets with intelligent caching
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Vary = "Accept-Encoding"
+
+# Handle JavaScript bundles
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Content-Type = "application/javascript"
+
+# Handle CSS files
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Content-Type = "text/css"
+
+# Handle HTML files
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Type = "text/html"
+
+# Handle images with compression
+[[headers]]
+  for = "*.{jpg,jpeg,png,gif,webp,svg}"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Vary = "Accept"
+
+# Security headers for all pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# Environment-specific configurations
+[context.production.environment]
+  REACT_APP_ENVIRONMENT = "production"
+  REACT_APP_API_URL = "https://your-production-backend.com"
+
+[context.deploy-preview.environment]
+  REACT_APP_ENVIRONMENT = "preview"
+  REACT_APP_API_URL = "https://your-staging-backend.com"
+
+[context.branch-deploy.environment]
+  REACT_APP_ENVIRONMENT = "development"
+  REACT_APP_API_URL = "https://your-dev-backend.com"
+
+# Build plugins for better performance and monitoring
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+
+[[plugins]]
+  package = "@netlify/plugin-sitemap"
+
+# Functions directory (if you add serverless functions later)
+# functions = "functions"
+
+# Edge functions (if you add them later)
+# edge_functions = "edge-functions"
+
+# Form handling (if you add forms)
+# [functions]
+#   external_node_modules = ["@netlify/functions"]
+
+# Build optimization
+[build.processing]
+  skip_processing = false
+
+# Asset optimization
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+[build.processing.images]
+  compress = true
+
+# Performance optimization
+[build.processing.images]
+  compress = true
+  quality = 85
+
+# Build hooks for notifications
+[build.hooks]
+  pre_build = "echo 'Starting build process...'"
+  post_build = "echo 'Build completed successfully!'"
+
+# Error handling
+[build.error_pages]
+  404 = "/404.html"
+  500 = "/500.html"
+
+# Custom domain configuration (uncomment when ready)
+# [context.production]
+#   command = "cd client && npm run build:production"
+# 
+# [context.staging]
+#   command = "cd client && npm run build:staging"
