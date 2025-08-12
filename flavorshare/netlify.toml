@@ -1,47 +1,18 @@
 [build]
-  # Auto-detect build settings - Netlify will automatically configure these
-  # but we provide fallbacks for better reliability
+  # Base directory - root of the repository
   base = ""
   
-  # Smart build command that auto-detects project structure
-  command = """
-  # Auto-detect and build based on project structure
-  if [ -d "client" ] && [ -f "client/package.json" ]; then
-    echo "🔄 Detected MERN stack structure - building from client directory"
-    cd client && npm install && npm run build
-  elif [ -f "package.json" ] && [ -d "src" ]; then
-    echo "🔄 Detected standard React app structure"
-    npm install && npm run build
-  elif [ -d "frontend" ] && [ -f "frontend/package.json" ]; then
-    echo "🔄 Detected frontend directory structure"
-    cd frontend && npm install && npm run build
-  else
-    echo "🔄 Attempting standard build process"
-    npm install && npm run build
-  fi
-  """
+  # Build command for MERN stack structure
+  command = "cd client && npm install && npm run build"
   
-  # Smart publish directory detection
-  publish = """
-  # Auto-detect build output directory
-  if [ -d "client/build" ]; then
-    echo "client/build"
-  elif [ -d "build" ]; then
-    echo "build"
-  elif [ -d "dist" ]; then
-    echo "dist"
-  elif [ -d "frontend/build" ]; then
-    echo "frontend/build"
-  else
-    echo "build"
-  fi
-  """
+  # Publish directory
+  publish = "client/build"
 
 [build.environment]
-  # Node.js version - Netlify will auto-detect but we specify for consistency
+  # Node.js version
   NODE_VERSION = "18"
   
-  # NPM version for better dependency management
+  # NPM version
   NPM_VERSION = "9"
   
   # Build optimization
