@@ -2,11 +2,11 @@
   # Base directory - root of the repository
   base = ""
   
-  # Build command for MERN stack structure
-  command = "cd client && npm install && npm run build"
+  # Build command for MERN stack structure (corrected path)
+  command = "cd flavorshare/client && npm install && npm run build"
   
-  # Publish directory
-  publish = "client/build"
+  # Publish directory (corrected path)
+  publish = "flavorshare/client/build"
 
 [build.environment]
   # Node.js version
