@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import api from '../utils/api';
 import RecipeCard from '../components/RecipeCard';
 import SearchBar from '../components/SearchBar';
 import FilterSidebar from '../components/FilterSidebar';
-import { Loader2, ChefHat, TrendingUp, Clock, Star } from 'lucide-react';
+import { Loader2, ChefHat, TrendingUp, Clock } from 'lucide-react';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');

@@ -150,12 +150,12 @@ const Login = () => {
 
             {/* Forgot Password Link */}
             <div className="text-center">
-              <a
-                href="#"
+              <button
+                type="button"
                 className="text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200"
               >
                 Forgot your password?
-              </a>
+              </button>
             </div>
           </form>
 
@@ -186,13 +186,19 @@ const Login = () => {
         <div className="text-center text-sm text-gray-600">
           <p>
             By signing in, you agree to our{' '}
-            <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">
+            <button
+              type="button"
+              className="text-primary-600 hover:text-primary-700 font-medium"
+            >
               Terms of Service
-            </a>{' '}
+            </button>{' '}
             and{' '}
-            <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">
+            <button
+              type="button"
+              className="text-primary-600 hover:text-primary-700 font-medium"
+            >
               Privacy Policy
-            </a>
+            </button>
           </p>
         </div>
       </div>

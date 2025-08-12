@@ -23,7 +23,7 @@ const EditRecipe = () => {
     watch,
   } = useForm();
 
-  const cuisine = watch('cuisine');
+  // Removed unused cuisine variable
 
   const cuisines = [
     'Italian', 'Mexican', 'Chinese', 'Indian', 'Japanese', 'French', 

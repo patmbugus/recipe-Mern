@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuth();
-  }, []);
+  }, [state.token]); // Added state.token to dependencies
 
   const login = async (email, password) => {
     dispatch({ type: 'AUTH_START' });

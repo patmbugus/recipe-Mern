@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, User, Heart, Star, ChefHat } from 'lucide-react';
+import { Clock, Users, Star } from 'lucide-react';
 
 const RecipeCard = ({ recipe }) => {
   const {
@@ -97,13 +97,13 @@ const RecipeCard = ({ recipe }) => {
                 {formatTime(prepTime)}
               </span>
               <span className="flex items-center">
-                <Heart className="h-4 w-4 mr-1 text-red-500" />
+                <Users className="h-4 w-4 mr-1 text-red-500" />
                 {likes.length}
               </span>
             </div>
             
             <div className="flex items-center">
-              <User className="h-4 w-4 mr-1" />
+              <Users className="h-4 w-4 mr-1" />
               <span className="truncate max-w-20">
                 {createdBy?.username || 'Anonymous'}
               </span>

@@ -20,8 +20,6 @@ const AddRecipe = () => {
     watch,
   } = useForm();
 
-  const cuisine = watch('cuisine');
-
   const cuisines = [
     'Italian', 'Mexican', 'Chinese', 'Indian', 'Japanese', 'French', 
     'Thai', 'Greek', 'Spanish', 'American', 'Mediterranean', 'Korean',
