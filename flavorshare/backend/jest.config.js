@@ -10,5 +10,4 @@ module.exports = {
     'src/middleware/**/*.js',
     '!src/**/*.test.js',
   ],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };
