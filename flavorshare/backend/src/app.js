@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const cors = require('cors'); // <-- Only import ONCE at the top
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -26,12 +26,10 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // CORS configuration
-const cors = require('cors');
 app.use(cors({
   origin: 'https://trishrecipe.netlify.app',
   credentials: true
 }));
-
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
