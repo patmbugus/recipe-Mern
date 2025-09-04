@@ -26,12 +26,12 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // CORS configuration
+const cors = require('cors');
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] 
-    : ['http://localhost:3000'],
+  origin: 'https://trishrecipe.netlify.app',
   credentials: true
 }));
+
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
